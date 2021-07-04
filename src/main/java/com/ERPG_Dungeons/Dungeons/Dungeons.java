@@ -1,7 +1,10 @@
 package com.ERPG_Dungeons.Dungeons;
 
+import com.ERPG_Dungeons.DiscordConstants;
+import com.ERPG_Dungeons.ERPG_Dungeons;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.awt.*;
@@ -27,18 +30,17 @@ public class Dungeons extends ListenerAdapter {
 
     long tempMessageId;
     EmbedBuilder tempEmbed;
-
     long channelId;
     String authorName;
     String reactionEmote;
     long memberIdInGame;
-
-
     int memberTimer;
-
     Point corPoint;
 
     boolean isAvailable = true;
+    String effect;
+    String currentBlock;
+    int currentBlockNumber;
 
     public Dungeons() {
 
@@ -56,8 +58,6 @@ public class Dungeons extends ListenerAdapter {
         rows.clear();
         columns.clear();
         memberBoard.clear();
-
-        corPoint = new Point(1,1);
 
         isAvailable = false;
     }
@@ -117,10 +117,11 @@ public class Dungeons extends ListenerAdapter {
         return temp;
     }
 
+    public void editEmbed(long messageId, Event event, EmbedBuilder embed, long channelId) {
+        event.getJDA().getTextChannelById(channelId).editMessageById(messageId, embed.build()).queue();
+    }
 
-
-
-
-
-
+    public void inactiveEmbed(long messageId, EmbedBuilder embed, long channelId) {
+        ERPG_Dungeons.jda.getTextChannelById(channelId).editMessageById(messageId, embed.setColor(0x2e2e2e).setFooter("Inactive").build()).queue();
+    }
 }
