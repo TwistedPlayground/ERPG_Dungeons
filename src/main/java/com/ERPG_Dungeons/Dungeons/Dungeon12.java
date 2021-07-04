@@ -26,50 +26,29 @@ public class Dungeon12 extends Dungeons {
     int orbs;
     int maxOrbs = 10;
 
-    String currentBlock;
-    int currentBlockNumber;
-
-    String effect;
-
-
-
-
-
-
-
-
     public Dungeon12() {
         corBlock.put(0, "⬛");
         corBlock.put(1, "\uD83D\uDD33");
         corBlock.put(2, "\uD83D\uDD32");
         corBlock.put(3, "⬜");
         corBlock.put(4, DiscordConstants.ultraEdgyArmor);
-        blockCor.put("⬛",0);
-        blockCor.put("\uD83D\uDD33",1 );
-        blockCor.put("\uD83D\uDD32",2);
-        blockCor.put("⬜",3 );
-        blockCor.put(DiscordConstants.ultraEdgyArmor,4 );
-
     }
-
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         if (!event.getMember().getUser().isBot()) {
             String[] args = event.getMessage().getContentRaw().split(" ");
-
             if (event.getChannel().getIdLong() == DiscordConstants.dungeon12ChannelId) {
                 if (args[0].equalsIgnoreCase(DiscordConstants.prefix + "d12")) {
                     if (isAvailable) {
                         authorName = event.getMember().getUser().getName();
-                        memberIdInGame   = event.getMember().getIdLong();
+                        memberIdInGame = event.getMember().getIdLong();
                         event.getMessage().delete().queue();
                         if (args.length != 2) {
                             event.getChannel().sendMessage("Usage: " + DiscordConstants.prefix + "[life]").queue((message -> {
                                 message.delete().queueAfter(2L, TimeUnit.SECONDS);
                             }));
                         } else {
-
                             try {
                                 if (Integer.parseInt(args[1]) < 10000 && Integer.parseInt(args[1]) > 1) {
                                     initializeDungeon(Integer.parseInt(args[1]), 9999999999999999L, 9999999999999999L);
@@ -86,20 +65,17 @@ public class Dungeon12 extends Dungeons {
                                         message.addReaction(DiscordConstants.attack).queue();
                                         message.addReaction(DiscordConstants.cancel).queue();
                                     }));
-                                    //add reaction
                                 } else {
                                     event.getChannel().sendMessage("<@!" + event.getMember().getIdLong() + ">, please provide an Integer smaller than 10000 and larger than 1.").queue((message -> {
                                         message.delete().queueAfter(2L, TimeUnit.SECONDS);
                                     }));
                                 }
-
                             } catch (NumberFormatException E) {
                                 event.getChannel().sendMessage("<@!" + event.getMember().getIdLong() + ">, please provide an Integer smaller than 10000 and larger than 1.").queue((message -> {
                                     message.delete().queueAfter(2L, TimeUnit.SECONDS);
                                 }));
                             }
                         }
-
                     } else {
                         event.getChannel().sendMessage("<@!" + event.getMember().getIdLong() + ">, someone is player here already! Wait till they've finished!").queue((message -> {
                             message.delete().queueAfter(2L, TimeUnit.SECONDS);
@@ -108,7 +84,6 @@ public class Dungeon12 extends Dungeons {
                 }
             }
         }
-
     }
 
     @Override
@@ -131,10 +106,9 @@ public class Dungeon12 extends Dungeons {
                         changeLife(-30);
                         changingTask();
                         if (detectLife()) {
-                            editEmbed(tempMessageId,event,editedEmbed());
-
+                            editEmbed(tempMessageId,event,editedEmbed(),DiscordConstants.dungeon12ChannelId);
                         } else {
-                            editEmbed(tempMessageId,event,deadEmbed());
+                            editEmbed(tempMessageId,event,deadEmbed(),DiscordConstants.dungeon12ChannelId);
                             leaveGame();
                         }
                     }
@@ -148,10 +122,9 @@ public class Dungeon12 extends Dungeons {
                         changeLife(-30);
                         changingTask();
                         if (detectLife()) {
-                            editEmbed(tempMessageId,event,editedEmbed());
-
+                            editEmbed(tempMessageId,event,editedEmbed(),DiscordConstants.dungeon12ChannelId);
                         } else {
-                            editEmbed(tempMessageId,event,deadEmbed());
+                            editEmbed(tempMessageId,event,deadEmbed(),DiscordConstants.dungeon12ChannelId);
                             leaveGame();
                         }
                     }
@@ -165,10 +138,9 @@ public class Dungeon12 extends Dungeons {
                         changeLife(-30);
                         changingTask();
                         if (detectLife()) {
-                            editEmbed(tempMessageId,event,editedEmbed());
-
+                            editEmbed(tempMessageId,event,editedEmbed(),DiscordConstants.dungeon12ChannelId);
                         } else {
-                            editEmbed(tempMessageId,event,deadEmbed());
+                            editEmbed(tempMessageId,event,deadEmbed(),DiscordConstants.dungeon12ChannelId);
                             leaveGame();
                         }
                     }
@@ -182,17 +154,16 @@ public class Dungeon12 extends Dungeons {
                         changeLife(-30);
                         changingTask();
                         if (detectLife()) {
-                            editEmbed(tempMessageId,event,editedEmbed());
-
+                            editEmbed(tempMessageId,event,editedEmbed(),DiscordConstants.dungeon12ChannelId);
                         } else {
-                            editEmbed(tempMessageId,event,deadEmbed());
+                            editEmbed(tempMessageId,event,deadEmbed(),DiscordConstants.dungeon12ChannelId);
                             leaveGame();
                         }
                     }
                 } else if (reactionEmote.equals(DiscordConstants.attack)) {
                     if (orbs == 10 && currentBlockNumber == 3) {
                         dragonHealth = dragonHealth - swordAt;
-                        editEmbed(tempMessageId,event,winEmbed());
+                        editEmbed(tempMessageId,event,winEmbed(),DiscordConstants.dungeon12ChannelId);
                         leaveGame();
                     } else {
                         event.getChannel().sendMessage("<@!" + event.getMember().getIdLong() + ">, you need to have 10 orbs and stand on " + corBlock.get(3) + ".").queue((message -> {
@@ -200,8 +171,7 @@ public class Dungeon12 extends Dungeons {
                         }));
                     }
                 } else if (reactionEmote.equals(DiscordConstants.cancel)) {
-                    inactiveEmbed(tempMessageId,tempEmbed);
-                    
+                    inactiveEmbed(tempMessageId,tempEmbed,DiscordConstants.dungeon12ChannelId);
                     leaveGame();
                 }
             }
@@ -211,7 +181,6 @@ public class Dungeon12 extends Dungeons {
 
     public void startGame() {
         Random blockGenerator = new Random();
-
         for (int count = 0; count < 3;count++) {
             for (int count2 = 0; count2 < 3;count2++) {
                 columns.add(blockGenerator.nextInt(4));
@@ -219,23 +188,20 @@ public class Dungeon12 extends Dungeons {
             rows.add(new ArrayList<>(columns));
             columns.clear();
         }
-
-
         rows.get(1).set(1,3);
-
 
         memberBoard = new ArrayList<>(rows);
         currentBlock = corBlock.get(memberBoard.get(Math.abs((int)corPoint.getY()-2)).get((int)corPoint.getX()));
-        currentBlockNumber = blockCor.get(currentBlock);
+        currentBlockNumber = memberBoard.get(Math.abs((int)corPoint.getY()-2)).get((int)corPoint.getX());
 
         memberBoard.get(1).set(1,4);
-
     }
 
     @Override
     public void initializeDungeon(int lifeNum, long dragonHealthNum, long at) {
         super.initializeDungeon(lifeNum,dragonHealthNum,at);
         orbs = 0;
+        corPoint = new Point(1,1);
     }
 
     @Override
@@ -252,7 +218,7 @@ public class Dungeon12 extends Dungeons {
                 @Override
                 public void run() {
                     if (getMemberTimer() == 0) {
-                        inactiveEmbed(tempMessageId,tempEmbed);
+                        inactiveEmbed(tempMessageId,tempEmbed, DiscordConstants.dungeon12ChannelId);
                         leaveGame();
                         timer.cancel();
                     } else if (isAvailable){
@@ -261,7 +227,6 @@ public class Dungeon12 extends Dungeons {
                         setMemberTimer(getMemberTimer() - 1);
                         System.out.println(getMemberTimer());
                     }
-
                 }
             };
             timer.schedule(task,1000,1000);
@@ -286,7 +251,7 @@ public class Dungeon12 extends Dungeons {
                 DiscordConstants.orb + " orbs\n" +
                 DiscordConstants.cancel + " - Exit the game```",false);
         layout.addField("Squares","Currently on " + currentBlock +
-                "\n\uD83D\uDD05 Energy orbs: " + orbs + "/10\n\n" +
+                "\n\uD83D\uDD05 Energy orbs: " + orbs + "/" + maxOrbs + "\n\n" +
                 "\uD83D\uDD32 -> +5 HP, -5 \uD83D\uDD05 orb\n" +
                 "\uD83D\uDD33 -> -500 HP\n" +
                 "⬛ -> +1 \uD83D\uDD05 orb, -25 HP\n" +
@@ -295,18 +260,6 @@ public class Dungeon12 extends Dungeons {
         tempEmbed = layout;
         return layout;
     }
-
-
-
-    private void editEmbed(long messageId, Event event, EmbedBuilder embed) {
-        event.getJDA().getTextChannelById(DiscordConstants.dungeon12ChannelId).editMessageById(messageId, embed.build()).queue();
-    }
-
-    private void inactiveEmbed(long messageId, EmbedBuilder embed) {
-        ERPG_Dungeons.jda.getTextChannelById(DiscordConstants.dungeon12ChannelId).editMessageById(messageId, embed.setColor(0x2e2e2e).setFooter("Inactive").build()).queue();
-    }
-
-
 
     private EmbedBuilder editedEmbed() {
         EmbedBuilder layout = new EmbedBuilder();
@@ -340,7 +293,7 @@ public class Dungeon12 extends Dungeons {
                 DiscordConstants.orb + " orbs\n" +
                 DiscordConstants.cancel + " - Exit the game```",false);
         layout.addField("Squares","Currently on " + currentBlock +
-                "\n\uD83D\uDD05 Energy orbs: " + orbs + "/10\n\n" +
+                "\n\uD83D\uDD05 Energy orbs: " + orbs + "/" + maxOrbs + "\n\n" +
                 "\uD83D\uDD32 -> +5 HP, -5 \uD83D\uDD05 orb\n" +
                 "\uD83D\uDD33 -> -500 HP\n" +
                 "⬛ -> +1 \uD83D\uDD05 orb, -25 HP\n" +
@@ -348,7 +301,6 @@ public class Dungeon12 extends Dungeons {
         layout.setFooter("You are in DUNGEON12! React below! This message will be inactive after 30 seconds.");
         tempEmbed = layout;
         return layout;
-
     }
 
     private EmbedBuilder deadEmbed() {
@@ -412,8 +364,6 @@ public class Dungeon12 extends Dungeons {
         }
         return temp;
     }
-
-
 
     private void changingTask() {
         //replace armor
@@ -496,5 +446,4 @@ public class Dungeon12 extends Dungeons {
             orbs = 10;
         }
     }
-
 }
