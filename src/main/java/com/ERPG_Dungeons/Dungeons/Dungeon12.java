@@ -45,7 +45,7 @@ public class Dungeon12 extends Dungeons {
                         memberIdInGame = event.getMember().getIdLong();
                         event.getMessage().delete().queue();
                         if (args.length != 2) {
-                            event.getChannel().sendMessage("Usage: " + DiscordConstants.prefix + "[life]").queue((message -> {
+                            event.getChannel().sendMessage("Usage: " + DiscordConstants.prefix + "d12 " + "[life]").queue((message -> {
                                 message.delete().queueAfter(2L, TimeUnit.SECONDS);
                             }));
                         } else {
@@ -446,4 +446,5 @@ public class Dungeon12 extends Dungeons {
             orbs = 10;
         }
     }
+
 }
