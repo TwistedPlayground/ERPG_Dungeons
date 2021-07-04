@@ -20,7 +20,7 @@ public class Dungeons extends ListenerAdapter {
     List<List<Integer>> memberBoard = new ArrayList<>();
 
     Map<Integer, String> corBlock = new HashMap<>();
-    Map<String, Integer> blockCor = new HashMap<>();
+
 
     int life;
     int maxLife;
